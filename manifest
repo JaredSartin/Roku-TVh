@@ -1,0 +1,9 @@
+title=TVh Client
+mm_icon_focus_hd=pkg:/images/TVH.png
+mm_icon_focus_sd=pkg:/images/TVH.png
+splash_screen_sd=pkg:/images/TVH.png
+splash_screen_hd=pkg:/images/TVH.png
+major_version=1
+minor_version=0
+build_version=1
+ui_resolutions=fhd

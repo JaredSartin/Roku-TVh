@@ -1,0 +1,126 @@
+Function Main() as void
+
+    print "Preparing Screen"
+screen = CreateObject("roSGScreen")
+    print "Preparing Scene"
+scene = screen.CreateScene("Scene")
+
+    print "Preparing Load"
+m.getChannelList = CreateObject("roSGNode", "LoaderTool")
+    print "Created Load"
+m.getChannelList.setField("uri", "/api/channel/grid?sort=channelNumber")
+    print "Set Load"
+m.getChannelList.observeField("content", "showhomeoptionslist")
+' m.getChannelList.functionName = "showhomeoptionslist"
+    print "Run Load"
+m.getChannelList.control = "RUN"
+
+print "post load"
+    AccessLock = 0
+    xfer = CreateObject("roUrlTransfer")
+    xfer.SetUrl(m.THV_Server + "/api/channel/grid?sort=name")
+    if (m.BasicAuth <> invalid)
+        xfer.AddHeader("Authorization", "Basic " + m.BasicAuth ) 
+    end if
+
+    entries = xfer.GetToString()
+    channels= ParseJSON(entries).entries
+    ' posterScreen = CreateObject("roPosterScreen")
+    port = CreateObject("roMessagePort")    
+    ' posterScreen.SetMessagePort(port)
+    ' posterScreen.SetBreadcrumbText("TVH Simple Client", "")
+    ' posterScreen.SetListDisplayMode("scale-to-fit")
+    contentList = CreateObject("roArray", 2, true)
+    xfer = CreateObject("roUrlTransfer")
+    xfer.SetUrl("http://" + m.TVH_Host + ":" + m.TVH_Port + "/api/epg/events/grid?mode=now")
+    if (m.BasicAuth <> invalid)
+        xfer.AddHeader("Authorization", "Basic " + m.BasicAuth ) 
+    end if
+    EPGJSON = ParseJSON(xfer.GetToString())
+    EPGChannelsData = CreateObject("roAssociativeArray")
+    EPGChannelsData = EPGJSON.entries
+    for each channel in channels
+        poster = CreateObject("roAssociativeArray")
+        poster.ShortDescriptionLine1 = channel.name
+	for each EPGChannelData in EPGChannelsData
+		if (EPGChannelData.channelUuid = channel.uuid)
+			poster.ShortDescriptionLine2 = EPGChannelData.title
+			exit for
+		end if
+	end for
+        poster.SDPosterURL = channel.icon
+        poster.HDPosterURL = channel.icon
+        contentList.push( poster )
+    end for
+
+    PlayVideo(channels[0])
+    ' posterScreen.SetContentList( contentList )
+    ' posterScreen.SetFocusedListItem(1)
+    ' posterScreen.show()
+    while (true)
+        msg = wait(0, port)
+        if type(msg) = "roPosterScreenEvent"
+            if (msg.isListItemSelected())
+		    if (AccessLock = 0)	
+			AccessLock = 1
+                	PlayVideo(channels[msg.GetIndex()])
+		    	AccessLock = 0
+    		    end if  
+            end if
+        endif
+    end while
+End Function
+
+Function PlayVideo(video as object) as integer
+    videoScreen = CreateObject("roSGNode", "Video")
+    port = CreateObject("roMessagePort")
+    ' videoScreen.SetMessagePort( port )
+    xfer = CreateObject("roUrlTransfer")
+    xfer.SetUrl("http://" + m.TVH_Host + ":" + m.TVH_Port + "/api/epg/events/grid?mode=now&limit=10&channel=" + video.uuid)
+    if (m.BasicAuth <> invalid)
+        xfer.AddHeader("Authorization", "Basic " + m.BasicAuth ) 
+    end if
+    EPGJSON = ParseJSON(xfer.GetToString())
+	if (EPGJSON.totalCount = 1)
+		EPGChannelData = CreateObject("roAssociativeArray")
+		EPGChannelData = EPGJSON.entries[0]
+        metaData = {
+        Live: true
+        ContentType: "Live",
+                Title: EPGChannelData.channelName ,
+                Description: EPGChannelData.description ,
+        ReleaseDate: EPGChannelData.title ,
+                Stream: {
+                    Url: "http://" + m.TVH_Host + ":" + m.TVH_Port + "/stream/channel/" + video.uuid 
+                }
+        }
+	else
+        metaData = {
+        Live: true
+        ContentType: "Live",
+                Title: video.name,
+                Description: "No infomation available",
+                Stream: {
+                    Url: "http://" + m.TVH_Host + ":" + m.TVH_Port + "/stream/channel/" + video.uuid
+                }
+        }
+	end if
+    if (m.BasicAuth <> invalid)
+        videoScreen.AddHeader("Authorization", "Basic " + m.BasicAuth ) 
+	end if  
+    videoContent = CreateObject("roSGNode", "ContentNode")
+    videoContent.url = metaData.Stream.Url
+    videoScreen.content = videoContent
+    videoScreen.visible = "true"
+    videoScreen.control = "play"
+    videoScreen.setFocus(true)
+    videoScreen.show()  
+    while (true)
+        msg = wait(0, port)
+        if type(msg) = "roVideoScreenEvent"
+            if (msg.isScreenClosed())
+                return -1
+            end if
+        endif
+    end while   
+End Function

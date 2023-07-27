@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="SettingsScreen" extends="Scene">
+  <children>
+
+    <Overhang
+      showClock="true"
+      title="TVh Client - Settings" />
+
+    <Label
+      id="serverLabel"
+      height="44"
+      width="600"
+      font="font:MediumBoldSystemFont"
+      text = "TVHeadend Server IP"
+      horizAlign = "right"
+      vertAlign = "center"
+      translation="[300,220]" />
+    <texteditbox 
+      id = "tvhServer" 
+      hinttext = "Server IP"
+      hintTextColor = "0xFFFFFF55"
+      width = "600"
+      translation = "[960, 200]"
+      clearOnDownKey = "false" />
+
+    <Label
+      id="portLabel"
+      height="44"
+      width="600"
+      font="font:MediumBoldSystemFont"
+      text = "TVHeadend Server Port"
+      horizAlign = "right"
+      vertAlign = "center"
+      translation="[300,320]" />
+    <texteditbox 
+      id = "tvhPort" 
+      hinttext = "Server Port"
+      hintTextColor = "0xFFFFFF55"
+      width = "600"
+      translation = "[960, 300]"
+      clearOnDownKey = "false" />
+
+    <Label
+      id="userLabel"
+      height="44"
+      width="600"
+      font="font:MediumBoldSystemFont"
+      text = "Client Username (optional)"
+      horizAlign = "right"
+      vertAlign = "center"
+      translation="[300,420]" />
+    <texteditbox 
+      id = "tvhUser" 
+      hinttext = "Client username"
+      hintTextColor = "0xFFFFFF55"
+      width = "600"
+      translation = "[960, 400]"
+      clearOnDownKey = "false" />
+
+    <Label
+      id="passwordLabel"
+      height="44"
+      width="600"
+      font="font:MediumBoldSystemFont"
+      text = "Client Password (optional)"
+      horizAlign = "right"
+      vertAlign = "center"
+      translation="[300,520]" />
+    <texteditbox 
+      id = "tvhPassword" 
+      hinttext = "Client password"
+      hintTextColor = "0xFFFFFF55"
+      width = "600"
+      translation = "[960, 500]"
+      clearOnDownKey = "false" />
+
+    <Group id = "helpText">
+      <Label
+        id="helpLabel1"
+        height="44"
+        width="1000"
+        font="font:MediumBoldSystemFont"
+        text = "Enter local TVHeadend server details."
+        horizAlign = "center"
+        vertAlign = "center"
+        translation="[460,600]" />
+      <Label
+        id="helpLabel2"
+        height="44"
+        width="1000"
+        font="font:MediumBoldSystemFont"
+        text = "Press back to save and exit."
+        horizAlign = "center"
+        vertAlign = "center"
+        translation="[460,650]" />
+    </Group>
+
+    <!-- <Keyboard
+      id = "settingsKeyboard"
+      translation = "[200, 2000]"
+      /> -->
+
+    <!-- <Exiter id="Exiter"/> -->
+  </children>
+
+  <script type="text/brightscript" uri="pkg:/components/SettingsScreen.brs"/>
+</component>

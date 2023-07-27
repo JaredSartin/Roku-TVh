@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="ChannelFetcher" extends="Task">
+  <interface>
+      <field id="rawChannels" type="string" value="" />
+  </interface>
+  <script type="text/brightscript" uri="pkg:/components/ChannelFetcher.brs"/>
+</component>

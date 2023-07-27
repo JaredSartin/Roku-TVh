@@ -1,0 +1,34 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+
+<component name = "LoaderTool" extends = "Task" >
+
+<interface>
+  <field id = "uri" type = "uri" />
+  <field id = "content" type = "node" />
+</interface> 
+
+<script type = "text/brightscript" >
+
+  <![CDATA[
+
+  sub init()
+    print "init"
+    m.top.functionName = "getContent"
+  end sub
+
+  sub getContent()
+    print "fetch"
+    content = createObject("roSGNode", "ContentNode")
+
+    readInternet = createObject("roUrlTransfer")
+    readInternet.setUrl(m.THV_Server + m.top.uri)
+
+    json = readInternet.getToString()
+    m.top.content = content
+  end sub
+
+  ]]>
+
+  </script>
+
+</component>
