@@ -9,6 +9,49 @@
       translation="[0,0]"
       visible="false"/>
 
+    <Group
+      id="DetailsPop"
+      translation="[150,680]" >
+      <Rectangle
+        width="1620"
+        height="300"
+        color="0x775577FF"
+      />
+      <SimpleLabel
+        id="ChannelNumber"
+        fontUri="font:SystemFontFile"
+        fontSize="100"
+        text="999"
+        color="0xFFFFFFFF"
+        horizOrigin="center"
+        translation="[145,30]" />
+      <LayoutGroup
+        translation="[280,30]" 
+        itemSpacings="[10]" 
+      >
+        <SimpleLabel
+          id="ProgramTitle"
+          fontUri="font:BoldSystemFontFile"
+          fontSize="48"
+          text="Program Name"
+          color="0xFFFFFFFF" />
+        <SimpleLabel
+          id="ProgramTiming"
+          fontUri="font:SystemFontFile"
+          fontSize="32"
+          text="10:30AM - 2:45PM"
+          color="0xFFFFFFFF" />
+        <Label
+          id="ProgramDescription"
+          font="font:MediumSystemFont"
+          width="1000"
+          text="Program description"
+          wrap="true"
+          color="0xFFFFFFFF" />
+      </LayoutGroup>
+    </Group>
+
+
     <!-- <Exiter id="Exiter"/> -->
   </children>
 
