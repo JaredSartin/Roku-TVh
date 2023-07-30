@@ -3,6 +3,8 @@
 <component name="ChannelFetcher" extends="Task">
   <interface>
       <field id="rawChannels" type="string" value="" />
+      <field id="errorState" type="string" value="" />
   </interface>
+  <script type="text/brightscript" uri="pkg:/components/roku-fetch/Fetch.brs"/>
   <script type="text/brightscript" uri="pkg:/components/ChannelFetcher.brs"/>
 </component>

@@ -4,14 +4,19 @@ sub init()
 
     m.activeChannel = getResumeChannel()
 
-	m.channelFetcher = CreateObject("roSGNode", "ChannelFetcher")
-	m.channelFetcher.ObserveField("rawChannels", "onChannelsFetched")
-	m.channelFetcher.control = "RUN"
+    m.channelFetcher = CreateObject("roSGNode", "ChannelFetcher")
+    m.channelFetcher.ObserveField("rawChannels", "onChannelsFetched")
+    m.channelFetcher.ObserveField("errorState", "onFetchError")
+    m.channelFetcher.control = "RUN"
 end sub
 
 function onChannelsFetched() as void
-	m.channels = ParseJSON(m.channelFetcher.rawChannels).entries
+    m.channels = ParseJSON(m.channelFetcher.rawChannels).entries
     changeChannel(m.activeChannel)
+end function
+
+function onFetchError() as void
+    print "well fuck"
 end function
 
 function changeChannel(channelIndex) as void
@@ -40,25 +45,25 @@ function changeChannel(channelIndex) as void
 end function
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
-  print "onKeyEvent ";key;" "; press
-  if press then
-    if key = "up" or key = "right"
-        if m.activeChannel = m.channels.Count() - 1
-            changeChannel(0)
-        else
-            changeChannel(m.activeChannel + 1)
+    print "onKeyEvent ";key;" "; press
+    if press then
+        if key = "up" or key = "right"
+            if m.activeChannel = m.channels.Count() - 1
+                changeChannel(0)
+            else
+                changeChannel(m.activeChannel + 1)
+            end if
+            return true
+        else if key = "down" or key = "left"
+            if m.activeChannel = 0
+                changeChannel(m.channels.Count() - 1)
+            else
+                changeChannel(m.activeChannel - 1)
+            end if
+            return true
         end if
-        return true
-    else if key = "down" or key = "left"
-        if m.activeChannel = 0
-            changeChannel(m.channels.Count() - 1)
-        else
-            changeChannel(m.activeChannel - 1)
-        end if
-        return true
     end if
-  end if
-  return false
+    return false
 end function
 
 function getResumeChannel() As integer

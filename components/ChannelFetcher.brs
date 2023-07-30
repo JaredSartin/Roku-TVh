@@ -4,12 +4,16 @@ end sub
 
 function getChannelList() as void
     print "fetching current programs..."
-    xfer = CreateObject("roUrlTransfer")
-    xfer.SetUrl(m.global.serverPath + "/api/epg/events/grid?mode=now&sort=channelNumber&limit=9999")
-    if (m.BasicAuth <> invalid)
-        xfer.AddHeader("Authorization", "Basic " + m.BasicAuth ) 
-    end if
 
-    channelsRaw = xfer.GetToString()
-	m.top.rawChannels = channelsRaw
+    response = fetch({
+        url: m.global.serverPath + "/api/epg/events/grid?mode=now&sort=channelNumber&limit=9999",
+        timeout: 2000,
+        method: "GET",
+    })
+    if response.ok
+        m.top.rawChannels = response.text()
+    else
+        ?"The request failed", response.statusCode, response.text()
+        m.top.errorState = response.text()
+    end if
 end function

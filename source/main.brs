@@ -6,8 +6,6 @@ sub Main()
     username=""
     password=""
 
-    ' TVH_Host="192.168.4.40"
-    ' TVH_Port="9981"
     THV_Server = getServer()
 
     if THV_Server = invalid
@@ -38,6 +36,8 @@ sub showVideoScreen()
     while(true)
         msg = wait(0, m.port)
         msgType = type(msg)
+        print "MESSAGE"
+        print msg.GetField()
         if msgType = "roSGScreenEvent"
             if msg.isScreenClosed() then return
         end if
